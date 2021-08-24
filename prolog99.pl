@@ -33,5 +33,12 @@ element_at(A,[_|L],M):-M>0,N is M-1,element_at(A,L,N).
 */
 
 
+count(0,[]).
+count(A, [_|L]):- count(A1,L),A is A1+1.
+
+
+/*
+1.05 (*) Reverse a list.
+*/
 
 
