@@ -41,4 +41,9 @@ count(A, [_|L]):- count(A1,L),A is A1+1.
 1.05 (*) Reverse a list.
 */
 
+myAppend([],L,L).
+myAppend([A|B],L,[A|X]):-myAppend(B,L,X).
+
+myReverse([],[]).
+myReverse([A|B],R):-myReverse(B,RB),myAppend(RB,[A],R).
 
