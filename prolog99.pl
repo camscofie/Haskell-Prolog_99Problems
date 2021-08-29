@@ -47,3 +47,22 @@ myAppend([A|B],L,[A|X]):-myAppend(B,L,X).
 myReverse([],[]).
 myReverse([A|B],R):-myReverse(B,RB),myAppend(RB,[A],R).
 
+/*
+1.06 (*) Find out whether a list is a palindrome.
+A palindrome can be read forward or backward; e.g. [x,a,m,a,x].
+*/
+
+isPalindrome([]).
+isPalindrome(X):-myReverse(X,Y),isSame(X,Y).
+
+isSame([],[]).
+isSame([X|XS],[X|YS]):-isSame(XS,YS).
+             
+             
+myAppend([],L,L).
+myAppend([A|B],L,[A|X]):-myAppend(B,L,X).
+
+myReverse([],[]).
+myReverse([A|B],R):-myReverse(B,RB),myAppend(RB,[A],R).
+
+

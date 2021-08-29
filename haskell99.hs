@@ -10,6 +10,7 @@ Find the last element of a list.
 λ> myLast ['x','y','z']
 'z' -}
 
+import Data.Array.Base (listArrayST)
 myLast :: [a] -> a
 myLast [] = error "nothing in the list"
 myLast [a] = a
@@ -57,7 +58,72 @@ elementAt (x:xs) n
     | n == 0 = x 
     | otherwise = elementAt xs (n-1)
 
+{-
+Problem 4
+(*) Find the number of elements of a list.
 
--- test with main--
+Example in Haskell:
+
+λ> myLength [123, 456, 789]
+3
+λ> myLength "Hello, world!"
+13
+-}
+
+myLength :: [a] -> Integer
+myLength [] = 0
+myLength list = foldr (\x y-> 1+y) 0 list-- test with main--
+
+
+{-
+Problem 5
+(*) Reverse a list.
+
+Example in Haskell:
+
+λ> myReverse "A man, a plan, a canal, panama!"
+"!amanap ,lanac a ,nalp a ,nam A"
+λ> myReverse [1,2,3,4]
+[4,3,2,1]
+-}
+
+myAppend :: [a] -> [a] -> [a]
+myAppend [] list = list
+myAppend (x:xs) list = x : (myAppend xs list) 
+
+myReverse :: [a] -> [a]
+myReverse list = myReverseAcc list []
+
+myReverseAcc :: [a] -> [a] -> [a]
+myReverseAcc [] acc = acc
+myReverseAcc (x:xs) acc = myReverseAcc xs (myAppend [x] acc)
+
+{-
+Problem 6
+(*) Find out whether a list is a palindrome. A palindrome can be read forward or backward; e.g. (x a m a x).
+
+Example in Haskell:
+
+λ> isPalindrome [1,2,3]
+False
+λ> isPalindrome "madamimadam"
+True
+λ> isPalindrome [1,2,4,8,16,8,4,2,1]
+True
+-}
+
+isPalindrome ::Ord a => [a] -> Bool
+isPalindrome list = isPalindromeAcc list revList
+    where
+    revList = myReverse list
+
+isPalindromeAcc :: Ord a=>[a]->[a]->Bool
+isPalindromeAcc [] [] = True
+isPalindromeAcc (x:xs) (y:ys)
+    | x == y = isPalindromeAcc xs ys
+    | otherwise = False
+
+
 main = do
-    print $ elementAt [3,4,5] 3
+    print $ isPalindrome [23,34,5,6]
+    print $ isPalindrome [23,3,23]
