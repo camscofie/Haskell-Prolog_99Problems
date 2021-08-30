@@ -11,6 +11,7 @@ Find the last element of a list.
 'z' -}
 
 import Data.Array.Base (listArrayST)
+import GHC.Classes (Eq)
 myLast :: [a] -> a
 myLast [] = error "nothing in the list"
 myLast [a] = a
@@ -123,7 +124,58 @@ isPalindromeAcc (x:xs) (y:ys)
     | x == y = isPalindromeAcc xs ys
     | otherwise = False
 
+{-
+Problem 7
+(**) Flatten a nested list structure.
+
+Transform a list, possibly holding lists as elements into a `flat' list by replacing each list with its elements (recursively).
+
+Example:
+
+* (my-flatten '(a (b (c d) e)))
+(A B C D E)
+Example in Haskell:
+
+We have to define a new data type, because lists in Haskell are homogeneous.
+
+ data NestedList a = Elem a | List [NestedList a]
+λ> flatten (Elem 5)
+[5]
+λ> flatten (List [Elem 1, List [Elem 2, List [Elem 3, Elem 4], Elem 5]])
+[1,2,3,4,5]
+λ> flatten (List [])
+[]
+-}
+
+data NestedList a = OneElem a | OneList [NestedList a] deriving (Show)
+flatten :: NestedList a -> [a]
+flatten (OneElem a) = [a]
+flatten (OneList []) = []
+flatten (OneList (x:xs)) = myAppend (flatten x) (flatten (OneList xs))
+
+{-
+Problem 8
+(**) Eliminate consecutive duplicates of list elements.
+
+If a list contains repeated elements they should be replaced with a single copy of the element. The order of the elements should not be changed.
+
+Example:
+
+* (compress '(a a a a b c c a a d e e e e))
+(A B C A D E)
+Example in Haskell:
+
+λ> compress "aaaabccaadeeee"
+"abcade"
+-}
+
+compress :: (Eq a) => [a] -> [a]
+compress [] = []
+compress [a] = [a]
+compress (x:y:xs)
+    | x == y = compress (x:xs)
+    | otherwise = myAppend [x] (compress (y:xs))
+ 
 
 main = do
-    print $ isPalindrome [23,34,5,6]
-    print $ isPalindrome [23,3,23]
+    print $ compress "aaaabccaadeeee"

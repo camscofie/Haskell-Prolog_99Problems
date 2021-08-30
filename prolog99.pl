@@ -66,3 +66,37 @@ myReverse([],[]).
 myReverse([A|B],R):-myReverse(B,RB),myAppend(RB,[A],R).
 
 
+/*
+1.07 (**) Flatten a nested list structure.
+Transform a list, possibly holding lists as elements into a 'flat' list by replacing each list with its elements (recursively).
+
+Example:
+?- my_flatten([a, [b, [c, d], e]], X).
+X = [a, b, c, d, e]
+*/
+
+my_flatten([],[]).
+my_flatten([A|B],Final):-isListy(A),my_flatten(A,AF),my_flatten(B,BF),myAppend(AF,BF,Final).
+my_flatten([A|B],Final):- \+ isListy(A),my_flatten(B,BF),myAppend([A],BF,Final).
+
+isListy([]).
+isListy([_|_]).
+
+myAppend([],L,L).
+myAppend([A|B],L,[A|X]):-myAppend(B,L,X).
+
+/*
+1.08 (**) Eliminate consecutive duplicates of list elements.
+If a list contains repeated elements they should be replaced with a single copy of the element. The order of the elements should not be changed.
+
+Example:
+?- compress([a,a,a,a,b,c,c,a,a,d,e,e,e,e],X).
+X = [a,b,c,a,d,e]
+*/
+
+compress([X],[X]).
+compress([X,Y|XS],Com):- X=Y, compress([Y|XS],Com).
+compress([X,Y|XS],Com):- not(X=Y),compress([Y|XS],YS),myAppend([X],YS,Com).
+
+myAppend([],L,L).
+myAppend([A|B],L,[A|X]):-myAppend(B,L,X).
