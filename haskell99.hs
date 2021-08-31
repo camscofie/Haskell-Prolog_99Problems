@@ -177,5 +177,36 @@ compress (x:y:xs)
     | otherwise = myAppend [x] (compress (y:xs))
  
 
+ {-
+ Problem 9
+(**) Pack consecutive duplicates of list elements into sublists. If a list contains repeated elements they should be placed in separate sublists.
+
+Example:
+
+* (pack '(a a a a b c c a a d e e e e))
+((A A A A) (B) (C C) (A A) (D) (E E E E))
+Example in Haskell:
+
+λ> pack ['a', 'a', 'a', 'a', 'b', 'c', 'c', 'a', 
+             'a', 'd', 'e', 'e', 'e', 'e']
+["aaaa","b","cc","aa","d","eeee"]
+ -}
+
+my_contain :: (Eq a) => [a] -> a -> Bool
+my_contain [] x = False
+my_contain (l:ls) x
+    | l == x = True
+    | otherwise = my_contain ls x
+
+pack :: (Eq a) => [a] -> [[a]]
+pack [a] = [[a]]
+pack (x:xs)
+    | my_contain y x = (x:y):ys
+    | otherwise = [x]:y:ys 
+    where 
+        (y:ys) = pack xs
+
+
+
 main = do
-    print $ compress "aaaabccaadeeee"
+    print $ pack "Haaallooo!!/"
