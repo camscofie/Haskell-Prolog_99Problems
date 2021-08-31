@@ -100,3 +100,22 @@ compress([X,Y|XS],Com):- not(X=Y),compress([Y|XS],YS),myAppend([X],YS,Com).
 
 myAppend([],L,L).
 myAppend([A|B],L,[A|X]):-myAppend(B,L,X).
+
+/*
+1.09 (**) Pack consecutive duplicates of list elements into sublists.
+If a list contains repeated elements they should be placed in separate sublists.
+
+Example:
+?- pack([a,a,a,a,b,c,c,a,a,d,e,e,e,e],X).
+X = [[a,a,a,a],[b],[c,c],[a,a],[d],[e,e,e,e]]
+*/
+
+contains([X|_],X):-!.
+contains([_|YS],X):-contains(YS,X).
+
+myAppend([],L,L).
+myAppend([A|B],L,[A|X]):-myAppend(B,L,X).
+
+pack([X],[[X]]):-!.
+pack([X|XS],PALL):-pack(XS,PXS),PXS=[H_PXS|T_PXS],contains(H_PXS,X),myAppend([X],H_PXS,NEW_H_PXS),=([NEW_H_PXS|T_PXS],PALL).
+pack([X|XS],PALL):-pack(XS,PXS),PXS=[H_PXS|_],\+contains(H_PXS,X),myAppend([[X]],PXS,PALL).
