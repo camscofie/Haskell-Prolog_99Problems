@@ -119,3 +119,34 @@ myAppend([A|B],L,[A|X]):-myAppend(B,L,X).
 pack([X],[[X]]):-!.
 pack([X|XS],PALL):-pack(XS,PXS),PXS=[H_PXS|T_PXS],contains(H_PXS,X),myAppend([X],H_PXS,NEW_H_PXS),=([NEW_H_PXS|T_PXS],PALL).
 pack([X|XS],PALL):-pack(XS,PXS),PXS=[H_PXS|_],\+contains(H_PXS,X),myAppend([[X]],PXS,PALL).
+
+
+/*
+1.10 (*) Run-length encoding of a list.
+Use the result of problem 1.09 to implement the so-called run-length encoding data compression method. Consecutive duplicates of elements are encoded as terms [N,E] where N is the number of duplicates of the element E.
+
+Example:
+?- encode([a,a,a,a,b,c,c,a,a,d,e,e,e,e],X).
+X = [[4,a],[1,b],[2,c],[2,a],[1,d],[4,e]]
+*/
+
+contains([X|_],X):-!.
+contains([_|YS],X):-contains(YS,X).
+
+myAppend([],L,L).
+myAppend([A|B],L,[A|X]):-myAppend(B,L,X).
+
+pack([X],[[X]]):-!.
+pack([X|XS],PALL):-pack(XS,PXS),PXS=[H_PXS|T_PXS],contains(H_PXS,X),myAppend([X],H_PXS,NEW_H_PXS),=([NEW_H_PXS|T_PXS],PALL).
+pack([X|XS],PALL):-pack(XS,PXS),PXS=[H_PXS|_],\+contains(H_PXS,X),myAppend([[X]],PXS,PALL).
+
+
+encode(X,Y):-pack(X,Packed),allPackTrans(Packed,Y).
+
+allPackTrans([],[]).
+allPackTrans([Head|Tail],AllPackTrans):-allPackTrans(Tail,TailTrans),onePackTrans(Head,HeadTrans),myAppend([HeadTrans],TailTrans,AllPackTrans).
+
+onePackTrans(OnePack,PackTrans):- countList(OnePack,Count),=(OnePack,[PHead|_]),PackTrans=(Count,PHead).
+
+countList([],0).
+countList([_|Xs],Count):- countList(Xs,CountPlus),Count is CountPlus+1.
